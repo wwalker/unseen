@@ -1,0 +1,12 @@
+unseen is like uniq, except that it doesn't require the input to be sorted and only provides the functionality of uniq without any switches.  However, unseen has to keep each line in memory, so it could get rather long rather quickly.
+
+find . | sed -e 's#.*/##' | sort | uniq #  results in a list of the unique filenames, when find has fully completed
+find . | sed -e 's#.*/##' | unseen      #  results in a list of the unique filenames, but undelayed
+
+Created due to some evil folks trying to us my DNS server as some kind of peer to peer tool.  This disabled them:
+
+tcpdump -i eth0 -n port 53 | egrep 'ANY\?' | sed -e 's/>.*//' | egrep -v '\.(domain|53)$' | sed -e 's/\.[^.]*$//' | awk '{print $3}' | ~/bin/unseen | xargs -I {} -n 1 route add -host {} lo
+
+Without unseen, I'd've had to repeated route block peers or run in a loop where tcpdump was only grabbing a few packets per pass.
+
+Wayne Walker - wwalker@bybent.com
